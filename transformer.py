@@ -1,7 +1,8 @@
 """Transform rows: rename columns, convert types, and compute totals."""
 from datetime import datetime
 import re
-
+import json 
+from pathlib import Path
 
 
 def to_snake_case(name: str) -> str:
@@ -38,19 +39,24 @@ def snake_case_columns(rows: list[dict[str, str]]) -> list[dict[str, str]]:
 
 
 
-COLUMN_MAPPING: dict[str, str] = {
-    "order_id": "order_id",
-    "customer_id": "customer_id",
-    "order_status": "status",
-    "order_purchase_timestamp": "order_date",
-    "order_delivered_customer_date": "delivered_date",
-    "order_item_id": "line_number",
-    "product_id": "product_id",
-    "seller_id": "seller_id",
-    "shipping_limit_date": "shipping_deadline",
-    "price": "item_price",
-    "freight_value": "freight_amount",
-}
+CONFIG_PATH = Path(__file__).parent / "config" / "column_mapping.json"
+
+
+def load_column_mapping(path: str | Path = CONFIG_PATH) -> dict[str, str]:
+    """Load the source-to-standard column mapping from a JSON file.
+
+    Args:
+        path: Path to a JSON object mapping source names to standard names.
+
+    Returns:
+        The mapping as a dictionary.
+    """
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+COLUMN_MAPPING: dict[str, str] = load_column_mapping()
+
 
 
 def map_columns(rows: list[dict[str, str]], mapping: dict[str, str]) -> list[dict[str, str]]:
@@ -171,3 +177,7 @@ def test_calculate_order_totals_sums_price_and_freight_per_order():
         {"order_id": "B", "item_price": 7.25, "freight_amount": 1.0},
     ]
     assert calculate_order_totals(rows) == {"A": 17.5, "B": 8.25}
+
+   
+
+

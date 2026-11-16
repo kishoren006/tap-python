@@ -1,0 +1,13 @@
+{
+  "order_id": "order_id",
+  "customer_id": "customer_id",
+  "order_status": "status",
+  "order_purchase_timestamp": "order_date",
+  "order_delivered_customer_date": "delivered_date",
+  "order_item_id": "line_number",
+  "product_id": "product_id",
+  "seller_id": "seller_id",
+  "shipping_limit_date": "shipping_deadline",
+  "price": "item_price",
+  "freight_value": "freight_amount"
+}
