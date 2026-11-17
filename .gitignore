@@ -2,3 +2,4 @@
 olist_data/
 __pycache__/
 .pytest_cache/
+bad_records.csv
