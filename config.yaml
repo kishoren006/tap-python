@@ -1,0 +1,54 @@
+# Settings for the Olist validation pipeline. Change values here, not in pipeline.py.
+
+# Paths (relative to the project folder)
+input_dir: olist_data
+output_dir: output
+log_dir: logs
+manifest_file: output/manifest.json
+
+# Validation
+max_reject_rate: 0.20          # fail a file when more than 20% of its rows are rejected
+date_format: "%Y-%m-%d %H:%M:%S"
+zip_pattern: "[0-9]{5}"        # zip prefix: exactly 5 digits
+id_pattern: "[0-9a-fA-F]{32}"  # IDs: exactly 32 hexadecimal characters
+
+allowed_statuses:
+  - approved
+  - created
+  - processing
+  - invoiced
+  - shipped
+  - delivered
+  - unavailable
+  - canceled
+
+# Required columns for each file
+files:
+  olist_orders_dataset.csv:
+    required: [order_id, customer_id, order_status, order_purchase_timestamp]
+  order_items.csv:
+    required: [order_id, order_item_id, product_id, seller_id, price, freight_value]
+  customers.csv:
+    required: [customer_id, customer_zip_code_prefix]
+
+# Source column name -> standard column name in the clean output
+column_mapping:
+  order_id: order_id
+  customer_id: customer_id
+  order_status: status
+  order_purchase_timestamp: order_date
+  order_delivered_customer_date: delivered_date
+  order_item_id: line_number
+  product_id: product_id
+  seller_id: seller_id
+  shipping_limit_date: shipping_deadline
+  price: item_price
+  freight_value: freight_amount
+  customer_unique_id: customer_unique_id
+  customer_city: customer_city
+  customer_state: customer_state
+
+# Standard names that are converted in the clean output
+float_columns: [item_price, freight_amount]
+integer_columns: [line_number]
+date_columns: [order_date, delivered_date, shipping_deadline]
